@@ -16,19 +16,29 @@ def is_colision(t1, t2):
 		return False
 
 wn = turtle.Screen()
+wn.bgpic('bg.gif')
 mouse = turtle.Turtle()
 mouse.shape('circle')
 mouse.shapesize(0.1)
 mouse.speed(0)
 mouse.up()
 
-goal = turtle.Turtle()
-goal.shape('circle')
-goal.color('green')
-goal.up()
+maxGoals = 3
+goals = []
+sizes = []
 size = 1
+for i in range(maxGoals):
+	goals.append(turtle.Turtle())
+	sizes.append(size)
+	goals[i].shape('circle')
+	goals[i].color('green')
+	goals[i].up()
+	goals[i].goto(random.randint(-300, 300),
+					random.randint(-300, 300))
+
 score = 0
 inc = 0.01
+
 wn.onclick(mouse.goto, btn = 1)
 turtle.listen()
 turtle.onkey(exit, 'q')
@@ -36,25 +46,26 @@ turtle.onkey(exit, 'q')
 #wn.tracer(2)
 game = True
 while game:
-	size += inc
-	goal.shapesize(size)
-	if size >= 5 and goal.color()[0] == 'green':
-		goal.color('orange')
-	if size >= 10 and goal.color()[0] == 'orange':
-		goal.color('red')
-	if size >= 20: 
-		game = False
-		wn.clear()
-		wn.bgcolor('black')	
-		goal.home()
-		goal.color('white')
-		goal.write('Game over', font = ('Arial', 24, 'normal'))	
-	if is_colision(mouse, goal):
-		inc += 0.01
-		size = 1
-		score += 1
-		goal.goto(random.randint(-300, 300), 
-			random.randint(-300, 300))	
+	for i in range(maxGoals):
+		for size in sizes():
+			goals[i].shapesize(size)
+			if size >= 5 and goals[i].color()[0] == 'green':
+				goals[i].color('orange')
+			if size >= 10 and goals[i].color()[0] == 'orange':
+				goals[i].color('red')
+			if size >= 20: 
+				game = False
+				wn.clear()
+				wn.bgcolor('black')	
+				turtle.home()
+				turtle.color('white')
+				turtle.write('Game over', font = ('Arial', 24, 'normal'))	
+			if is_colision(mouse, goals[i]):
+				inc += 0.01
+				size = 1
+				score += 1
+				goals[i].goto(random.randint(-300, 300), 
+					random.randint(-300, 300))	
 
 wn.exitonclick()
 
